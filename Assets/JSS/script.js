@@ -1,12 +1,14 @@
+var cityList = [];
 
+//even listener for button click
 
-function weatherUpdate(){
+function weatherUpdate(city){
 
     // API key
     var key = '0d5eaf94c0bcbc10362599a78ea0e18c'
 
     //searched city
-    var city = "Richmond";
+    // var city = "Richmond";
 
     //GeoCoding Request URL
 
@@ -14,10 +16,6 @@ function weatherUpdate(){
 
     // Weather Request URL for ease of access
     // var wRequestURL = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + '44.34' + '&lon=' + '10.99' + '&appid=' + key + '&units=metric';
-
-    //array to store weather objects
-
-    var weather = [];
 
     //fetch the coordinates of the city
     fetch(gRequestURL)
@@ -43,7 +41,7 @@ function weatherUpdate(){
             return response.json();
         })
         .then(function (data) {
-
+            var weather = [];
             //adds every 8 entries (every 24h) to the weather list
             for (i = 0; i < data.list.length; i+=8){
                 weather[i/8] = {
@@ -62,11 +60,51 @@ function weatherUpdate(){
                 wind: data.list[data.list.length - 1].wind.speed,
                 humidity: data.list[data.list.length - 1].main.humidity
             }
-            console.log(weather);
+            // console.log(weather);
+
+            return weather;
+        }).then(function (weather) {
+            var fArray = document.querySelectorAll('div.future');
+            var today = document.querySelectorAll('div.currentDate');
+
+            today[0].children[0].children[0].textContent = city;
+            today[0].children[0].children[1].textContent = weather[0].date;
+            today[0].children[1].src = 'https://openweathermap.org/img/wn/' + weather[0].icon + '.png'
+            today[0].children[2].children[0].textContent = weather[0].temp;
+            today[0].children[3].children[0].textContent = weather[0].wind;
+            today[0].children[4].children[0].textContent = weather[0].humidity;
+
+            for (i = 0; i < fArray.length; i++) {
+
+                fArray[i].children[0].children[0].textContent = weather[i+1].date;
+                fArray[i].children[1].src = 'https://openweathermap.org/img/wn/' + weather[i+1].icon + '.png'
+                fArray[i].children[2].children[0].textContent = weather[i+1].temp;
+                fArray[i].children[3].children[0].textContent = weather[i+1].wind;
+                fArray[i].children[4].children[0].textContent = weather[i+1].humidity;
+            }
         });
 }
 
-weatherUpdate();
+document.querySelector('#searchBtn').addEventListener('click', function () {
+    var city = document.querySelector('#searchInput').value;
+
+    var cityBtn = document.createElement("btn");
+
+    weatherUpdate(city);
+    if (cityList.length < 6){
+        cityList.unshift(city);
+    } else {
+        cityList.pop();
+        cityList.unshift(city);
+    }
+    localStorage.setItem("cityList", cityList);
+    console.log(localStorage.getItem("cityList"));
+    
+    
+
+})
+
+
 // function to get the coordinates from the city searched using GEOCODING API
 
 // use passed log and lat to search for 6 counts of weather (every 8 in the weather list returned should be 24h appart)
