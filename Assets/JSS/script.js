@@ -1,6 +1,8 @@
-var cityList = [];
-
-//even listener for button click
+try {
+    var cityList = JSON.parse(localStorage.getItem("cityList"));
+} catch {
+    var cityList = [];
+}
 
 function weatherUpdate(city){
 
@@ -18,6 +20,7 @@ function weatherUpdate(city){
     // var wRequestURL = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + '44.34' + '&lon=' + '10.99' + '&appid=' + key + '&units=metric';
 
     //fetch the coordinates of the city
+
     fetch(gRequestURL)
         .then(function (response) {
             return response.json();
@@ -82,13 +85,17 @@ function weatherUpdate(city){
                 fArray[i].children[3].children[0].textContent = weather[i+1].wind;
                 fArray[i].children[4].children[0].textContent = weather[i+1].humidity;
             }
-        });
+        })
+    
 }
 
 document.querySelector('#searchBtn').addEventListener('click', function () {
     var city = document.querySelector('#searchInput').value;
-
-    var cityBtn = document.createElement("btn");
+    if (city == ''){
+        alert("Please enter a City");
+        return;
+    }
+    var searchHistory = document.querySelector('#searchHistory');
 
     weatherUpdate(city);
     if (cityList.length < 6){
@@ -97,20 +104,30 @@ document.querySelector('#searchBtn').addEventListener('click', function () {
         cityList.pop();
         cityList.unshift(city);
     }
-    localStorage.setItem("cityList", cityList);
-    console.log(localStorage.getItem("cityList"));
-    
-    
-
+    localStorage.setItem("cityList", JSON.stringify(cityList));
+    // console.log(localStorage.getItem("cityList"));
+    // console.log(cityList[0]);
+    searchHistory.innerHTML = '';
+    createHistory();
 })
 
+createHistory();
 
-// function to get the coordinates from the city searched using GEOCODING API
+function createHistory () {
+    var searchHistory = document.querySelector('#searchHistory');
 
-// use passed log and lat to search for 6 counts of weather (every 8 in the weather list returned should be 24h appart)
+    for (i =0; i < cityList.length; i++){
+        var btn = document.createElement('button');
+        btn.textContent = cityList[i];
+        btn.className = "col";
+        btn.addEventListener('click', searchCityHistory);
+        searchHistory.appendChild(btn);
+        // console.log(btn);
+    }
 
-// pass relevent information into 6 objects
+}
 
-//store the city name and fetch request into an object list in local stoage (10 objects long, no more)
-
-// display search history buttons and the current search/most recent search
+function searchCityHistory () {
+    var city = this.textContent;
+    weatherUpdate(city);
+}
