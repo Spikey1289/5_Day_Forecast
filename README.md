@@ -11,4 +11,4 @@ Through this challenge, I was able to learn how to use javascript to make API fe
 
 
 ### Screenshot of Finished Website
-![Screenshot of Website](./Assets/README-img/Date_Planner_Refactor_Screenshot.png)
+![Screenshot of Website]()
