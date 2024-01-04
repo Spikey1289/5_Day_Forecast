@@ -1,8 +1,6 @@
-try {
+
     var cityList = JSON.parse(localStorage.getItem("cityList"));
-} catch {
-    var cityList = [];
-}
+
 
 function weatherUpdate(city){
 
@@ -116,13 +114,17 @@ createHistory();
 function createHistory () {
     var searchHistory = document.querySelector('#searchHistory');
 
-    for (i =0; i < cityList.length; i++){
-        var btn = document.createElement('button');
-        btn.textContent = cityList[i];
-        btn.className = "col";
-        btn.addEventListener('click', searchCityHistory);
-        searchHistory.appendChild(btn);
-        // console.log(btn);
+    if (cityList !== null) {
+        for (i = 0; i < cityList.length; i++) {
+            var btn = document.createElement('button');
+            btn.textContent = cityList[i];
+            btn.className = "col";
+            btn.addEventListener('click', searchCityHistory);
+            searchHistory.appendChild(btn);
+            // console.log(btn);
+        }
+    } else {
+        cityList = [];
     }
 
 }
