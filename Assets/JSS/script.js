@@ -14,7 +14,7 @@ function weatherUpdate(city){
 
     //GeoCoding Request URL
 
-    var gRequestURL = "http://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=" + key;
+    var gRequestURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + city + "&limit=1&appid=" + key;
 
     // Weather Request URL for ease of access
     // var wRequestURL = 'https://api.openweathermap.org/data/2.5/forecast?lat=' + '44.34' + '&lon=' + '10.99' + '&appid=' + key + '&units=metric';
